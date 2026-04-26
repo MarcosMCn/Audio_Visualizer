@@ -29,17 +29,17 @@ void audio_DSP_task(void *param)
             // Calculate RMS to measure "loudness" of sound.
             float rms = 0;
             for (int i = 0; i < raw_audio_data->sample_count; i++) {
-            float sample = (float)(raw_audio_data->samples[i] >> 8) * NORMALIZE;
+            float sample = (float)(raw_audio_data->samples[i] >> 8);
             rms += sample * sample;
             }
             rms = sqrtf(rms / raw_audio_data->sample_count);
+            printf("RMS: %.2f dB\n", rms);
 
-
-            float db = 20.0f * log10f(rms + 1e-12f);
-            static float db_smooth = 0.0f;
-            float alpha = (db > db_smooth) ? 0.6f : 0.95f;
-            db_smooth = alpha * db_smooth + (1 - alpha) * db;
-            printf("Loudness: %.2f dB\n", db_smooth);
+            // float db = 20.0f * log10f(rms + 1e-12f);
+            // static float db_smooth = 0.0f;
+            // float alpha = (db > db_smooth) ? 0.6f : 0.95f;
+            // db_smooth = alpha * db_smooth + (1 - alpha) * db;
+            // // printf("Loudness: %.2f dB\n", db_smooth);
 
             // 2. Apply Hamming window and populate sample table.
             for (int i = 0; i < raw_audio_data->sample_count; i++) {
