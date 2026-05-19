@@ -3,9 +3,10 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "driver/i2s.h"
 #include "esp_err.h"
 
 void audio_DSP_task(void *param);
-
+float highPass_filter(float x);
+void init_bin_freq();
+void UART_transmit_FFT_data(uint8_t *mag);
 #endif

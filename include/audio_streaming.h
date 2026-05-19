@@ -3,14 +3,13 @@
 
 #include <stdint.h>
 #include <stddef.h>
-#include "driver/i2s.h"
 #include "esp_err.h"
+#include "PCM1808.h"
 
-#define AUDIO_READ_SIZE 1024
-#define FFT_SAMPLE_BUFFER_SIZE 4096
-
+#define FFT_SAMPLE_BUFFER_SIZE 2048
 typedef struct {
-    int32_t samples[AUDIO_READ_SIZE];
+    int32_t samples_left[AUDIO_READ_SIZE];
+    int32_t samples_right[AUDIO_READ_SIZE];
     size_t sample_count;
 } audio_stream_data_t;
 
