@@ -11,7 +11,6 @@ i2s_chan_handle_t PCM1808_handle = NULL;
 
 esp_err_t PCM1808_init(void)
 {
-
     i2s_chan_config_t PCM1808_chan_config = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_AUTO, I2S_ROLE_MASTER);
     PCM1808_chan_config.auto_clear = true; // Auto clear the legacy data in the DMA buffer
     esp_err_t chan = i2s_new_channel(&PCM1808_chan_config, NULL, &PCM1808_handle);
@@ -84,3 +83,5 @@ size_t PCM1808_read(int32_t *buffer_left, int32_t *buffer_right)
 
     return frames_read;
 }
+
+

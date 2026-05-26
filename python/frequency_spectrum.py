@@ -36,7 +36,7 @@ def read_packet():
                 data = ser.read(FFT_HALF_SIZE)
 
                 if len(data) == FFT_HALF_SIZE:
-                    return np.frombuffer(data, dtype=np.uint8)
+                    return np.frombuffer(data, dtype=np.int8)
 
 
 # -----------------------------
@@ -57,7 +57,7 @@ line, = ax.plot(
     drawstyle='steps-mid'
 )
 
-ax.set_ylim(0, 255)
+ax.set_ylim(-120, 0)
 # ax.set_xlim(np.log10(1), np.log10(FFT_HALF_SIZE))
 
 ax.set_title("Real-time FFT (UART)")

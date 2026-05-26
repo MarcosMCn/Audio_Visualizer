@@ -7,6 +7,7 @@
 #include "esp_dsp.h"
 #include "driver/uart.h"
 #include "main.h"
+#include "stream_buffer.h"
 
 static const char *TAG = "MAIN";
 
@@ -23,25 +24,21 @@ void app_main(void)
 {
     esp_log_level_set("*", ESP_LOG_NONE);
     uart_init();
-    dsps_fft2r_init_fc32(NULL, FFT_SAMPLE_BUFFER_SIZE);
+    dsps_fft2r_init_fc32(NULL, FFT_WINDOW_SIZE);
 
-    QueueHandle_t audio_queue;
     PCM1808_init();
 
-    audio_queue = xQueueCreate(2, sizeof(fft_sample_buffer_t *));
-    if (audio_queue == NULL) {
-        printf("Failed to create audio queue\n");
-        return;
-    }
+    stream_buffer_init(&left_stream_buffer);
+    stream_buffer_init(&right_stream_buffer);
 
     // Define audio streaming task
     xTaskCreatePinnedToCore(
         audio_streaming_task, // Task function
         "audio_stream", // Task name
         8196, // Stack size
-        (void*)audio_queue, // Function parameter
+        NULL, // Function parameter
         7, // Task priority
-        NULL, // Task handle
+        &audio_streaming_task_handle, // Task handle
         1 // CPU core
     );
 
@@ -49,10 +46,10 @@ void app_main(void)
     xTaskCreatePinnedToCore(
         audio_DSP_task,
         "audio_dsp",
-        20480,
-        (void *)audio_queue,
-        5,
+        8196,
         NULL,
+        7,
+        &audio_DSP_task_handle,
         1
     );
 
